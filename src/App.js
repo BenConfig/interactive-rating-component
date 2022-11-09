@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import RatingSelection from './components/RatingSelection';
+import RatingSubmitted from './components/RatingSubmitted';
+import './app.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App() {
+    const [currentRating, setCurrentRating] = useState('');
+    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
+    const changeRating = newRating => setCurrentRating(newRating);
+
+    const submitForm = e => {
+        e.preventDefault();
+        setIsFormSubmitted(true);
+    }
+
+    return (
+        <main  className={`card ${isFormSubmitted && "flip"}`}>
+            <RatingSelection
+                currentRating={currentRating}
+                changeRating={changeRating}
+                submitForm={submitForm} />
+            <RatingSubmitted currentRating={currentRating} />
+        </main>
+    )
 }
-
-export default App;

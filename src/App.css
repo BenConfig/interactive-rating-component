@@ -1,38 +1,349 @@
-.App {
-  text-align: center;
+/* ------------------------------------------------------ */
+/*                          Fonts                         */
+/* ------------------------------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Overpass:wght@400;700&display=swap');
+
+/* ------------------------------------------------------ */
+/*                    Custom Properties                   */
+/* ------------------------------------------------------ */
+:root {
+    /* Font Weights */
+    --fw-normal: 400;
+    --fw-bold: 700;
+
+    /* Border Radii */
+    --br-app: clamp(1rem, -2.9375rem + 16.87vw, 1.875rem);
+    --br-pill: 100vmax;
+
+    /* Colors */
+    --clr-primary: hsl(25 97% 53%);
+    --clr-white: hsl(0 0% 100%);
+    --clr-body-text: hsl(217 12% 63%);
+    --clr-selected-rating-bg: hsl(216 12% 54%);
+    --clr-rating-bg: hsl(210 17% 18%);
+    --clr-app-bg: hsl(213 19% 13%);
+    --clr-body-bg: hsl(216 12% 8%);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* ------------------------------------------------------ */
+/*                Resets and Global Styles                */
+/* ------------------------------------------------------ */
+* { box-sizing: border-box; }
+
+.sr-only {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body,
+h1, p,
+fieldset,
+button { margin: 0; }
+
+body {
+    display: grid;
+    place-content: center;
+    min-height: 100vh;
+    font: var(--fw-normal) clamp(.875rem, .5625rem + 1.2vw, .9375rem)/1.6 'Overpass', sans-serif;
+    padding: 1.5rem;
+    color: var(--clr-body-text);
+    background: var(--clr-body-bg);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+h1 {
+    font-size: clamp(1.5rem, .375rem + 4.71vw, 1.75rem);
+    letter-spacing: -.005em;
+    line-height: 1.2;
+    font-weight: var(--fw-bold);
+    color: var(--clr-white);
+    margin-bottom: .5625rem;
 }
 
-.App-link {
-  color: #61dafb;
+fieldset {
+    padding: 0;
+    border: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button,
+label {
+    display: grid;
+    place-items: center;
+    min-width: 44px; /* Accessibility requirement */
+    min-height: 44px; /* Accessibility requirement */
+    border-radius: var(--br-pill);
+    cursor: pointer;
 }
+
+button {
+    font: inherit;
+    border: none;
+}
+
+.card { display: grid; }
+
+.rating-selection,
+.rating-submitted {
+    grid-area: 1 / -1 / 1 / -1;
+    max-width: 25.75rem;
+    border-radius: var(--br-app);
+    background: var(--clr-app-bg);
+}
+
+/* ------------------------------------------------------ */
+/*              Rating Selection (card front)             */
+/* ------------------------------------------------------ */
+.rating-selection {
+    padding: clamp(1.5rem, -.6875rem + 9.41vw, 2rem);
+    padding-bottom: 2rem;
+}
+
+/* The Star icon */
+.rating-selection::before {
+    content: '';
+    display: grid;
+    place-content: center;
+    width: clamp(2.5rem, .3125rem + 9.41vw, 3rem);
+    aspect-ratio: 1;
+    border-radius: var(--br-pill);
+    margin-bottom: clamp(1.125rem, -3.3125rem + 18.82vw, 2.125rem);
+    background: var(--clr-rating-bg) url('./images/icon-star.svg')
+                no-repeat center / clamp(.875rem, .0625rem + 3.53vw, 1.0625rem);
+}
+
+.rating-selection__paragraph { margin-bottom: clamp(1.5rem, .6875rem + 3.53vw, 1.6875rem); }
+
+.rating-selection__fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .625rem;
+    max-width: 10rem;
+    margin: 0 auto clamp(1.625rem, 0rem + 7.06vw, 2rem);
+}
+
+@media only screen and (min-width: 22.5em) {
+    .rating-selection__fieldset {
+        justify-content: space-between;
+        max-width: initial;
+    }
+}
+
+.rating-selection__label {
+    width: clamp(2.625rem, .125rem + 10.59vw, 3.1875rem);
+    aspect-ratio: 1;
+    font-size: clamp(.875rem, .3125rem + 2.35vw, 1rem);
+    padding-top: .25rem;
+    background: var(--clr-rating-bg);
+}
+
+.rating-selection__submit {
+    width: 100%;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    padding: .75rem 1rem .5625rem;
+    background: var(--clr-rating-bg);
+    overflow: hidden;
+}
+
+/* Inform screen-readers that form cannot be submitted until rating has been selected */
+.rating-selection__submit:disabled + .rating-selection__submit-tip { visibility: visible; }
+.rating-selection__submit-tip { visibility: hidden; }
+
+/* ------------------------------------------------------ */
+/*              Rating Submitted (card back)              */
+/* ------------------------------------------------------ */
+.rating-submitted {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    text-align: center;
+    padding-inline: clamp(1rem, -4.0625rem + 21.69vw, 2.125rem);
+}
+
+.rating-submitted__output {
+    order: -1;
+    letter-spacing: .005em;
+    padding: .375rem .6875rem .1875rem;
+    border-radius: var(--br-pill);
+    margin-bottom: clamp(1.75rem, -.25rem + 8.43vw, 2.1875rem);
+    color: var(--clr-primary);
+    background: var(--clr-rating-bg);
+}
+
+.rating-submitted__img {
+    order: -2;
+    width: clamp(9rem, 3.9375rem + 21.69vw, 10.125rem);
+    margin-bottom: clamp(1.5rem, -.5rem + 8.43vw, 1.9375rem);
+}
+
+/* ------------------------------------------------------ */
+/*                       Transitions                      */
+/* ------------------------------------------------------ */
+
+/* --------------- Rating Selection Labels -------------- */
+.rating-selection__label {
+    position: relative;
+    z-index: 1;
+    transition: color 200ms ease-out;
+}
+
+/* Set up pseudo-elements */
+.rating-selection__label::before,
+.rating-selection__label::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+}
+
+/* Hover & Focus Styles */
+.rating-selection__label::before {
+    background: var(--clr-primary);
+    transform: scale(0);
+    transition: opacity 200ms ease-out,
+                transform 200ms ease-out;
+}
+
+.rating-selection__label:hover,
+.rating-selection__input:focus + .rating-selection__label { color: var(--clr-white); }
+
+.rating-selection__label:hover::before,
+.rating-selection__input:focus + .rating-selection__label::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 'Checked' Styles */
+.rating-selection__label::after {
+    background: var(--clr-selected-rating-bg);
+    transition: opacity 400ms ease-out;
+}
+
+.rating-selection__input:checked + .rating-selection__label {
+    color: var(--clr-white);
+    cursor: default;
+}
+
+.rating-selection__input:checked + .rating-selection__label::before {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.rating-selection__input:checked + .rating-selection__label::after { opacity: 1; }
+
+/* ----------- Rating Selection Submit Button ----------- */
+.rating-selection__submit {
+    position: relative;
+    z-index: 1;
+    color: var(--clr-white);
+    pointer-events: initial;
+    transition: color 200ms ease-out;
+}
+
+/* Set up pseudo-elements */
+.rating-selection__submit::before,
+.rating-selection__submit::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+}
+
+/* Button Disabled Styles */
+.rating-selection__submit:disabled {
+    color: var(--clr-body-text);
+    pointer-events: none;
+}
+
+.rating-selection__submit::before {
+    opacity: 1;
+    background: var(--clr-primary);
+    transition: opacity 400ms ease-out;
+}
+
+.rating-selection__submit:disabled::before { opacity: 0; }
+
+/* Hover & Focus Styles */
+.rating-selection__submit::after {
+    box-shadow: 0 0 5rem 5rem var(--clr-white);
+    background: var(--clr-white);
+    opacity: 0;
+    transform: scale(0) rotate(-135deg);
+    transition: opacity 200ms ease-out,
+                transform 200ms ease-out;
+}
+
+.rating-selection__submit:hover,
+.rating-selection__submit:focus {
+    outline: none;
+    color: var(--clr-primary);
+}
+
+.rating-selection__submit:hover::after,
+.rating-selection__submit:focus::after {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+/* ---------------------- Card Flip --------------------- */
+.card {
+    perspective: 60rem;
+    transform-style: preserve-3d;
+}
+
+/* Set transitions for both sides of card */
+.rating-selection,
+.rating-submitted {
+    transition: transform 1000ms ease-in-out,
+                visibility 0ms ease-in-out 500ms;
+}
+
+/* Set overlay for subtle color transition while flipping */
+.rating-selection::after,
+.rating-submitted::after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    border-radius: inherit;
+    background: hsl(0 0% 100% / .1);
+    pointer-events: none;
+    transition: opacity 500ms ease-in-out;
+}
+
+/* Front side starts with invisible overlay */
+.rating-selection::after { opacity: 0; }
+
+/* Front side flips forward and becomes hidden at mid point */
+.card.flip > .rating-selection {
+    transform: rotateX(-.5turn);
+    visibility: hidden;
+}
+
+/* Front side overlay increases visibility towards mid point */
+.card.flip > .rating-selection::after { opacity: 1; }
+
+/* Back side start upside-down and hidden */
+.rating-submitted {
+    transform: rotateX(.5turn);
+    visibility: hidden;
+}
+
+/* Back side flips forward but is only visible from mid point */
+.card.flip > .rating-submitted {
+    visibility: visible;
+    transform: rotateX(0);
+}
+
+/* Back side overlay starts opaque but transition is delayed until mid point */
+.rating-submitted::after {
+    transition-delay: 500ms;
+    opacity: 1;
+}
+
+/* Back side overlay decreases visibility until end of flip */
+.card.flip > .rating-submitted::after { opacity: 0; }
