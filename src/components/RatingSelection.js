@@ -26,7 +26,7 @@ const RatingSelection = ({ currentRating, changeRating, submitForm }) => {
         <section className="rating-selection" aria-describedby="rating-selection-heading">
             <h1 className="rating-selection__heading" id="rating-selection-heading">How did we do?</h1>
             <p className="rating-selection__paragraph">Please let us know how we did with your support request. All feedback is appreciated to help us improve our offering!</p>
-            <form className="rating-selection__form" action="" onSubmit={submitForm}>
+            <form className="rating-selection__form" onSubmit={submitForm}>
                 <fieldset className="rating-selection__fieldset">
                     <legend className="sr-only">Select a rating from 1 to 5</legend>
                     {ratingElements}
